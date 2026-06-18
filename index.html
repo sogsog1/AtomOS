@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AtomOS</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="desktop" aria-label="AtomOS desktop">
+      <section class="topbar" aria-label="System bar">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <span>AtomOS</span>
+        </div>
+        <div class="system-status">
+          <span id="window-count">0 windows</span>
+          <span>No password</span>
+        </div>
+      </section>
+
+      <section class="dock" aria-label="Launcher">
+        <button class="dock-button" type="button" data-open-kind="folder" title="Open workspace">
+          <span class="dock-icon folder-icon" aria-hidden="true"></span>
+          Workspace
+        </button>
+        <button class="dock-button" type="button" data-open-kind="file" title="Open note">
+          <span class="dock-icon file-icon" aria-hidden="true"></span>
+          Note
+        </button>
+        <button class="dock-button" type="button" data-open-kind="panel" title="Open storage">
+          <span class="dock-icon panel-icon" aria-hidden="true"></span>
+          Storage
+        </button>
+      </section>
+
+      <section id="window-layer" class="window-layer" aria-label="Open windows"></section>
+    </main>
+
+    <template id="window-template">
+      <article class="os-window" tabindex="0">
+        <header class="window-titlebar">
+          <div class="window-label">
+            <span class="window-glyph" aria-hidden="true"></span>
+            <div>
+              <h2></h2>
+              <p></p>
+            </div>
+          </div>
+          <div class="window-actions">
+            <button class="usage-button" type="button" title="Mark as used">Use</button>
+            <button class="close-button" type="button" title="Close window" aria-label="Close window">x</button>
+          </div>
+        </header>
+        <div class="window-body"></div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
