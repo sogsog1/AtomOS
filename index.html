@@ -20,18 +20,21 @@
       </section>
 
       <section class="dock" aria-label="Launcher">
-        <button class="dock-button" type="button" data-open-kind="folder" title="Open workspace">
-          <span class="dock-icon folder-icon" aria-hidden="true"></span>
-          Workspace
-        </button>
-        <button class="dock-button" type="button" data-open-kind="file" title="Open note">
-          <span class="dock-icon file-icon" aria-hidden="true"></span>
-          Note
-        </button>
-        <button class="dock-button" type="button" data-open-kind="panel" title="Open storage">
-          <span class="dock-icon panel-icon" aria-hidden="true"></span>
-          Storage
-        </button>
+        <button class="dock-toggle" type="button" aria-expanded="false" aria-label="Show launcher">‹</button>
+        <div class="dock-menu" aria-hidden="true">
+          <button class="dock-button" type="button" data-open-kind="folder" title="Open workspace">
+            <span class="dock-icon folder-icon" aria-hidden="true"></span>
+            Workspace
+          </button>
+          <button class="dock-button" type="button" data-open-kind="file" title="Open note">
+            <span class="dock-icon file-icon" aria-hidden="true"></span>
+            Note
+          </button>
+          <button class="dock-button" type="button" data-open-kind="panel" title="Open storage">
+            <span class="dock-icon panel-icon" aria-hidden="true"></span>
+            Storage
+          </button>
+        </div>
       </section>
 
       <section id="window-layer" class="window-layer" aria-label="Open windows"></section>
@@ -43,16 +46,17 @@
           <div class="window-label">
             <span class="window-glyph" aria-hidden="true"></span>
             <div>
-              <h2></h2>
+              <input class="rename-input" type="text" aria-label="Window name" />
               <p></p>
             </div>
           </div>
           <div class="window-actions">
-            <button class="usage-button" type="button" title="Mark as used">Use</button>
+            <button class="fix-button" type="button" title="Fix window in place">Fix</button>
             <button class="close-button" type="button" title="Close window" aria-label="Close window">x</button>
           </div>
         </header>
         <div class="window-body"></div>
+        <div class="resize-handle" aria-hidden="true"></div>
       </article>
     </template>
 

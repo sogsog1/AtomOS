@@ -110,6 +110,8 @@ button {
   right: 16px;
   bottom: 16px;
   display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
   gap: 8px;
   max-width: calc(100vw - 32px);
   padding: 8px;
@@ -118,6 +120,38 @@ button {
   background: rgba(27, 30, 31, 0.8);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
+}
+
+.dock-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 6px;
+  background: #292e30;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.dock-menu {
+  display: flex;
+  gap: 8px;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    width 180ms ease,
+    opacity 140ms ease;
+}
+
+.dock.is-open .dock-menu {
+  width: 315px;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .dock-button {
@@ -200,6 +234,35 @@ button {
   box-shadow: 0 28px 88px rgba(0, 0, 0, 0.52);
 }
 
+.os-window.folder-icon-window.is-dragging {
+  box-shadow: none;
+}
+
+.os-window.is-resizing {
+  box-shadow: 0 28px 88px rgba(0, 0, 0, 0.52);
+}
+
+.os-window.is-fixed {
+  border-color: rgba(86, 198, 187, 0.62);
+}
+
+.folder-icon-window.is-fixed .window-glyph {
+  outline: 2px solid rgba(86, 198, 187, 0.65);
+  outline-offset: 3px;
+}
+
+.os-window.is-fixed .window-titlebar {
+  background: rgba(86, 198, 187, 0.1);
+}
+
+.os-window.is-renaming .rename-input {
+  padding: 2px 5px;
+  margin: -2px -5px;
+  border-radius: 5px;
+  background: rgba(86, 198, 187, 0.18);
+  box-shadow: 0 0 0 1px rgba(86, 198, 187, 0.42);
+}
+
 .window-titlebar {
   display: flex;
   align-items: center;
@@ -224,9 +287,74 @@ button {
   height: 22px;
 }
 
+.folder-icon-window {
+  width: 82px;
+  min-height: 96px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.folder-icon-window .window-titlebar {
+  display: grid;
+  justify-items: center;
+  min-height: 96px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+}
+
+.folder-icon-window .window-label {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+}
+
+.folder-icon-window .window-actions,
+.folder-icon-window .resize-handle,
+.folder-icon-window .window-titlebar p {
+  display: none;
+}
+
+.folder-icon-window .window-glyph {
+  width: 58px;
+  height: 50px;
+  border-radius: 8px;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 12px 22px rgba(0, 0, 0, 0.25);
+}
+
+.folder-icon-window .window-glyph::before {
+  display: block;
+  width: 26px;
+  height: 9px;
+  margin-top: -7px;
+  margin-left: 7px;
+  border-radius: 5px 5px 0 0;
+  background: var(--yellow);
+  content: "";
+}
+
+.folder-icon-window .rename-input {
+  width: 82px;
+  max-width: 82px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 650;
+  text-align: center;
+  white-space: normal;
+}
+
 .os-window[data-kind="folder"] .window-glyph {
   border-radius: 4px;
   background: var(--yellow);
+}
+
+.folder-icon-window[data-kind="folder"] .window-glyph {
+  border-radius: 8px;
 }
 
 .os-window[data-kind="file"] .window-glyph {
@@ -239,7 +367,7 @@ button {
   border-radius: 50%;
 }
 
-.window-titlebar h2,
+.rename-input,
 .window-titlebar p {
   max-width: 190px;
   margin: 0;
@@ -248,9 +376,26 @@ button {
   white-space: nowrap;
 }
 
-.window-titlebar h2 {
+.rename-input {
+  display: block;
+  width: 190px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
   font-size: 15px;
+  font-weight: 720;
   line-height: 1.2;
+  outline: 0;
+}
+
+.rename-input:focus {
+  text-overflow: clip;
+}
+
+.rename-input::selection,
+.note-editor::selection {
+  background: rgba(86, 198, 187, 0.35);
 }
 
 .window-titlebar p {
@@ -266,7 +411,7 @@ button {
   gap: 7px;
 }
 
-.usage-button,
+.fix-button,
 .close-button {
   min-height: 30px;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -275,9 +420,14 @@ button {
   cursor: pointer;
 }
 
-.usage-button {
+.fix-button {
   padding: 5px 9px;
-  background: rgba(86, 198, 187, 0.18);
+  background: rgba(231, 189, 82, 0.18);
+}
+
+.os-window.is-fixed .fix-button {
+  border-color: rgba(86, 198, 187, 0.55);
+  background: rgba(86, 198, 187, 0.24);
 }
 
 .close-button {
@@ -289,10 +439,115 @@ button {
 .window-body {
   display: grid;
   gap: 12px;
+  height: calc(100% - 58px);
   padding: 14px;
   color: #ded9cf;
   font-size: 13px;
   line-height: 1.45;
+}
+
+.os-window[data-kind="file"] .window-body,
+.os-window[data-kind="panel"] .window-body {
+  grid-template-rows: minmax(92px, 1fr) auto auto;
+}
+
+.note-editor {
+  width: 100%;
+  height: 100%;
+  min-height: 92px;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.45;
+  outline: 0;
+  user-select: text;
+}
+
+.note-editor:focus {
+  border-color: rgba(86, 198, 187, 0.58);
+}
+
+.folder-summary {
+  min-width: 22px;
+  margin: -37px 0 0 48px;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(17, 19, 20, 0.88);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 760;
+  text-align: center;
+}
+
+.os-window:not(.folder-icon-window) .folder-summary {
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed rgba(231, 189, 82, 0.38);
+  border-radius: 6px;
+  background: rgba(231, 189, 82, 0.08);
+  color: var(--muted);
+  font-weight: 400;
+  text-align: left;
+}
+
+.folder-icon-window .window-body {
+  height: auto;
+  padding: 0;
+}
+
+.folder-icon-window.is-folder-open .window-body {
+  position: absolute;
+  top: 102px;
+  left: 0;
+  width: 230px;
+  max-height: 250px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(31, 35, 37, 0.96);
+  box-shadow: var(--shadow);
+  overflow: auto;
+}
+
+.folder-icon-window.is-folder-open .folder-summary {
+  display: none;
+}
+
+.folder-icon-window .atom-list li {
+  cursor: pointer;
+}
+
+.resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22px;
+  height: 22px;
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
+.resize-handle::before,
+.resize-handle::after {
+  position: absolute;
+  right: 5px;
+  bottom: 6px;
+  width: 11px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.42);
+  content: "";
+  transform: rotate(-45deg);
+}
+
+.resize-handle::after {
+  right: 3px;
+  bottom: 10px;
+  width: 15px;
 }
 
 .meter {
@@ -341,6 +596,61 @@ button {
   font-size: 12px;
 }
 
+.context-menu {
+  position: fixed;
+  z-index: 100;
+  display: none;
+  min-width: 150px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(31, 35, 37, 0.96);
+  box-shadow: var(--shadow);
+}
+
+.context-menu.is-open {
+  display: grid;
+  gap: 4px;
+}
+
+.context-submenu {
+  position: relative;
+}
+
+.context-submenu > div {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 6px);
+  display: none;
+  min-width: 165px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(31, 35, 37, 0.96);
+  box-shadow: var(--shadow);
+}
+
+.context-submenu:hover > div,
+.context-submenu:focus-within > div {
+  display: grid;
+  gap: 4px;
+}
+
+.context-menu button {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.context-menu button:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
 @media (max-width: 680px) {
   .system-status span:last-child {
     display: none;
@@ -349,23 +659,30 @@ button {
   .dock {
     right: 10px;
     bottom: 10px;
-    left: 10px;
-    justify-content: center;
+    left: auto;
+    justify-content: flex-start;
   }
 
   .dock-button {
-    flex: 1;
     justify-content: center;
     min-width: 0;
     padding-inline: 7px;
+  }
+
+  .dock.is-open .dock-menu {
+    width: min(285px, calc(100vw - 78px));
   }
 
   .os-window {
     width: min(300px, calc(100vw - 24px));
   }
 
-  .window-titlebar h2,
+  .rename-input,
   .window-titlebar p {
     max-width: 128px;
+  }
+
+  .rename-input {
+    width: 128px;
   }
 }
